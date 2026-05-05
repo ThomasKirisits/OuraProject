@@ -1,21 +1,36 @@
-# 🧠 Oura Personal Health Dashboard & ML Analytics (Personal Use only)
+# 🧠 Oura Personal Health Dashboard & ML Analytics
 
-## 📝 OURA-API Application Information
-A personal project to collect, visualize, and analyze biometric data from the Oura Ring, with a focus on advanced machine learning insights into sleep, recovery, and long-term health trends.
-I will only use this for my personal OURA data and have no intention to monetize it.
+A self-hosted project to collect, visualize, and analyze biometric data from the Oura API, with a focus on personal experimentation and machine learning.
+
+---
+
+## ⚠️ Important Disclaimer
+
+This repository contains **source code only**.
+
+* This is **not a hosted service**
+* The developer does **not run any servers or backend for users**
+* The developer does **not receive, store, or process any user data**
+
+If you clone or use this repository:
+
+> **You are fully responsible for your deployment, your data, and how the software is used.**
+
+- [Terms of Service](./TERMS_OF_SERVICE.md)
+- [Privacy Policy](./PRIVACY_POLICY.md)
 
 ---
 
 ## 🚀 Overview
 
-This project integrates with the Oura API to build a **private health dashboard** and a **data pipeline for machine learning analysis**.
+This project enables individuals to build their own private health dashboard and analytics pipeline using data from the Oura API.
 
-The goal is to:
+All data flows directly between:
 
-* Centralize personal health data
-* Track long-term trends in sleep, readiness, and activity
-* Apply ML techniques to uncover patterns and predictions
-* Experiment with personalized health optimization strategies
+* Your environment
+* The Oura API
+
+The developer is **not involved in this process**.
 
 ---
 
@@ -26,75 +41,47 @@ The goal is to:
 * Fetch data from Oura API (v2)
 * Supported endpoints:
 
-  * Sleep data
-  * Activity data
-  * Readiness scores
+  * Sleep
+  * Activity
+  * Readiness
   * Heart rate & HRV
-* Historical data syncing + incremental updates
+* Historical sync + incremental updates
 
 ### Dashboard
 
 * Time-series visualizations
-* Daily, weekly, monthly summaries
-* Correlation views (e.g. sleep vs readiness)
-* Trend detection
+* Daily / weekly / monthly summaries
+* Trend exploration
+* Correlation views
 
 ### Machine Learning & Analytics
 
-* Feature engineering from raw Oura metrics
+* Feature engineering from Oura metrics
 * Time-series analysis
-* Anomaly detection (e.g. poor recovery days)
-* Predictive modeling:
-
-  * Sleep quality prediction
-  * Readiness forecasting
-* Clustering of behavioral patterns
-* Experiment tracking (lifestyle vs metrics)
+* Anomaly detection
+* Predictive modeling (experimental)
+* Behavioral pattern clustering
 
 ---
 
 ## 🏗️ Architecture
 
 ```text
-Oura API → Backend → Database → ML Pipeline → Dashboard
+Your Oura Account → Your App Instance → Your Storage → Your ML Pipeline
 ```
 
-### Components
-
-* **Backend**
-
-  * Handles OAuth2 authentication
-  * Fetches and normalizes Oura data
-  * Exposes internal API
-
-* **Database**
-
-  * Stores time-series biometric data
-  * Enables historical analysis
-
-* **ML Pipeline**
-
-  * Data preprocessing
-  * Feature engineering
-  * Model training & evaluation
-
-* **Frontend Dashboard**
-
-  * Data visualization
-  * Insight exploration
+* All components are deployed and controlled **entirely by you**
+* No data passes through any system controlled by the developer
 
 ---
 
 ## 🔑 Authentication
 
-This project uses OAuth 2.0 to securely access Oura data.
+This project uses OAuth 2.0 to connect to the Oura API.
 
-Steps:
-
-1. User authorizes the application
-2. Backend exchanges authorization code for access token
-3. Token is stored securely
-4. API requests include Bearer token
+* Authentication is configured and executed **by the user**
+* Access tokens are stored **only in your environment**
+* The developer has **no access to credentials or tokens**
 
 ---
 
@@ -103,7 +90,7 @@ Steps:
 ### Prerequisites
 
 * Oura account with active membership
-* API application credentials:
+* Oura API application credentials:
 
   * Client ID
   * Client Secret
@@ -127,48 +114,75 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 🧪 ML Ideas (Planned / In Progress)
+## 🔒 Data & Privacy
 
-* Predict next-day readiness from sleep + activity
-* Detect overtraining or burnout signals
-* Identify optimal sleep windows
-* Cluster lifestyle patterns (e.g. “high recovery days”)
-* Build personalized health score
+* The developer does **not collect or access any user data**
+* All data remains within your own environment
+* You are responsible for:
 
----
-
-## 🔒 Privacy & Data Usage
-
-* This is a **personal project**
-* All data is private and not shared with third parties
-* Tokens and sensitive data are stored securely
-* No external data resale or tracking
+  * Data storage
+  * Security
+  * Compliance with applicable laws
 
 ---
 
-## ⚠️ Notes
+## ⚠️ No Medical Advice
 
-* Oura API v2 is used (v1 is deprecated)
-* API rate limits apply
-* Data availability depends on Oura membership status
+This project is for informational and experimental purposes only.
+
+* It does **not** provide medical advice
+* It is **not a medical device**
+* Do not use it for diagnosis or treatment
+
+---
+
+## ⚖️ Responsibility
+
+By using this project, you acknowledge:
+
+* You run and manage the software independently
+* You are solely responsible for your data and usage
+* The developer is **not liable** for any outcomes, including:
+
+  * Data issues
+  * Incorrect analysis
+  * Health-related decisions
+
+---
+
+## 🧪 ML Ideas (Optional Extensions)
+
+* Predict readiness from sleep/activity
+* Detect overtraining or fatigue
+* Identify optimal sleep patterns
+* Build personalized health scoring
 
 ---
 
 ## 🛠️ Future Improvements
 
-* Real-time updates via webhooks
-* Integration with other health sources (Apple Health, Garmin, etc.)
-* Advanced deep learning models
-* Automated recommendations engine
+* Webhook-based updates
+* Multi-source integrations (Apple Health, Garmin, etc.)
+* Advanced ML models
+* Automated insights
 
 ---
 
 ## 📜 License
 
-Private / Personal Use
+See LICENSE file (recommended: MIT License)
 
 ---
 
 ## ✨ Motivation
 
-Understanding personal health through data, and experimenting with machine learning to move from **tracking → insight → prediction → optimization**.
+A personal exploration of turning raw health data into meaningful insights through:
+
+> tracking → understanding → modeling → experimentation
+
+---
+
+## 📬 Contact
+
+[Thomas Kirisits](https://github.com/ThomasKirisits)
+
