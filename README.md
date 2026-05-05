@@ -170,7 +170,7 @@ By using this project, you acknowledge:
 
 ## 📜 License
 
-See LICENSE file (recommended: MIT License)
+See LICENSE file (MIT License)
 
 ---
 
