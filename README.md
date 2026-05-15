@@ -1,27 +1,27 @@
-# 🧠 Oura Personal Health Dashboard & ML Analytics
+# Oura Personal Health Dashboard & ML Analytics
 
 A self-hosted project to collect, visualize, and analyze biometric data from the Oura API, with a focus on personal experimentation and machine learning.
 
 ---
 
-## ⚠️ Important Disclaimer
+## Important Disclaimer
 
-This repository contains **source code only**.
+This repository contains source code only.
 
-* This is **not a hosted service**
-* The developer does **not run any servers or backend for users**
-* The developer does **not receive, store, or process any user data**
+* This is not a hosted service
+* The developer does not run any servers or backend for users
+* The developer does not receive, store, or process any user data
 
 If you clone or use this repository:
 
-> **You are fully responsible for your deployment, your data, and how the software is used.**
+> You are fully responsible for your deployment, your data, and how the software is used.
 
 - [Terms of Service](./TERMS_OF_SERVICE.md)
 - [Privacy Policy](./PRIVACY_POLICY.md)
 
 ---
 
-## 🚀 Overview
+## Overview
 
 This project enables individuals to build their own private health dashboard and analytics pipeline using data from the Oura API.
 
@@ -30,93 +30,111 @@ All data flows directly between:
 * Your environment
 * The Oura API
 
-The developer is **not involved in this process**.
+The developer is not involved in this process.
 
 ---
 
-## 📊 Features
+## Features
 
 ### Data Ingestion
 
-* Fetch data from Oura API (v2)
+* Fetch data from Oura API v2
 * Supported endpoints:
 
+  * Personal info
   * Sleep
   * Activity
   * Readiness
-  * Heart rate & HRV
-* Historical sync + incremental updates
+  * Heart rate
 
 ### Dashboard
 
-* Time-series visualizations
-* Daily / weekly / monthly summaries
-* Trend exploration
-* Correlation views
+* Readiness score, HRV balance, resting-heart-rate contributor, temperature deviation
+* Sleep score, total sleep duration, sleep efficiency, restless periods
+* Activity score, steps, active calories, walking distance
+* Heart-rate latest sample, average BPM, sample count
+* 7-180 day selectable data window
+* Raw data previews for validation and debugging
 
-### Machine Learning & Analytics
+### Authentication Harness
 
-* Feature engineering from Oura metrics
-* Time-series analysis
-* Anomaly detection
-* Predictive modeling (experimental)
-* Behavioral pattern clustering
+* Personal Access Token support via `OURA_ACCESS_TOKEN`
+* Sidebar status check without revealing the token
+* Tokens stay in your shell, service manager, or local secret manager
+* `.env` and Streamlit secrets are ignored by Git
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```text
-Your Oura Account → Your App Instance → Your Storage → Your ML Pipeline
+Your Oura Account -> Your App Instance -> Oura API -> Local Dashboard
 ```
 
-* All components are deployed and controlled **entirely by you**
-* No data passes through any system controlled by the developer
+Core files:
+
+* `dashboard.py` - Streamlit UI
+* `oura_project/auth.py` - local token/auth status harness
+* `oura_project/client.py` - Oura API v2 client
+* `oura_project/metrics.py` - summary helpers for dashboard cards
+* `tests/test_metrics.py` - standard-library tests for auth, date ranges, and metrics
 
 ---
 
-## 🔑 Authentication
-
-This project uses OAuth 2.0 to connect to the Oura API.
-
-* Authentication is configured and executed **by the user**
-* Access tokens are stored **only in your environment**
-* The developer has **no access to credentials or tokens**
-
----
-
-## ⚙️ Setup
+## Setup
 
 ### Prerequisites
 
 * Oura account with active membership
-* Oura API application credentials:
+* Python 3.11+
+* Oura Personal Access Token
 
-  * Client ID
-  * Client Secret
+Create a personal access token in your Oura developer settings, then keep it outside the repository.
 
 ### Environment Variables
 
 ```bash
-OURA_CLIENT_ID=your_client_id
-OURA_CLIENT_SECRET=your_client_secret
-OURA_REDIRECT_URI=http://localhost:3000/callback
+cp .env.example .env
+export OURA_ACCESS_TOKEN=your_personal_access_token
+export OURA_DAYS_BACK=30
+```
+
+### Install
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+### Run the Dashboard
+
+```bash
+streamlit run dashboard.py
+```
+
+### Run Tests
+
+```bash
+python3 -m unittest discover -s tests -v
 ```
 
 ---
 
-## 📡 Example API Call
+## Example API Call
 
 ```http
 GET https://api.ouraring.com/v2/usercollection/daily_sleep
 Authorization: Bearer <access_token>
 ```
 
+The app performs live API calls through `oura_project/client.py` and never commits tokens or response data.
+
 ---
 
-## 🔒 Data & Privacy
+## Data & Privacy
 
-* The developer does **not collect or access any user data**
+* The developer does not collect or access any user data
 * All data remains within your own environment
 * You are responsible for:
 
@@ -126,23 +144,23 @@ Authorization: Bearer <access_token>
 
 ---
 
-## ⚠️ No Medical Advice
+## No Medical Advice
 
 This project is for informational and experimental purposes only.
 
-* It does **not** provide medical advice
-* It is **not a medical device**
+* It does not provide medical advice
+* It is not a medical device
 * Do not use it for diagnosis or treatment
 
 ---
 
-## ⚖️ Responsibility
+## Responsibility
 
 By using this project, you acknowledge:
 
 * You run and manage the software independently
 * You are solely responsible for your data and usage
-* The developer is **not liable** for any outcomes, including:
+* The developer is not liable for any outcomes, including:
 
   * Data issues
   * Incorrect analysis
@@ -150,7 +168,7 @@ By using this project, you acknowledge:
 
 ---
 
-## 🧪 ML Ideas (Optional Extensions)
+## ML Ideas
 
 * Predict readiness from sleep/activity
 * Detect overtraining or fatigue
@@ -159,30 +177,31 @@ By using this project, you acknowledge:
 
 ---
 
-## 🛠️ Future Improvements
+## Future Improvements
 
+* OAuth 2.0 callback flow for multi-user deployment
+* Local encrypted token storage
 * Webhook-based updates
-* Multi-source integrations (Apple Health, Garmin, etc.)
+* Multi-source integrations such as Apple Health or Garmin
 * Advanced ML models
 * Automated insights
 
 ---
 
-## 📜 License
+## License
 
-See LICENSE file (MIT License)
+See LICENSE file (MIT License).
 
 ---
 
-## ✨ Motivation
+## Motivation
 
 A personal exploration of turning raw health data into meaningful insights through:
 
-> tracking → understanding → modeling → experimentation
+> tracking -> understanding -> modeling -> experimentation
 
 ---
 
-## 📬 Contact
+## Contact
 
 [Thomas Kirisits](https://github.com/ThomasKirisits)
-
