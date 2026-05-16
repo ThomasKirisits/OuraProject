@@ -1,9 +1,10 @@
 import unittest
 
 from datetime import date
-from unittest.mock import patch
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
-from oura_project.auth import auth_status, get_access_token
+from oura_project.auth import OAuthConfig, auth_status, authorization_url, get_access_token, save_token, token_expired
 from oura_project.client import DateRange
 from oura_project.metrics import (
     activity_summary,
@@ -76,10 +77,33 @@ class DashboardSupportTest(unittest.TestCase):
             },
         )
 
-    def test_auth_status_uses_environment_token(self):
-        with patch.dict("os.environ", {"OURA_ACCESS_TOKEN": "secret"}, clear=False):
-            self.assertEqual(get_access_token(), "secret")
-            self.assertTrue(auth_status().configured)
+    def test_auth_status_uses_saved_oauth_token(self):
+        with TemporaryDirectory() as directory:
+            token_file = Path(directory) / "token.json"
+            save_token({"access_token": "secret", "expires_in": 3600}, token_file)
+
+            self.assertTrue(auth_status(token_file).configured)
+            self.assertEqual(get_access_token(token_file), "secret")
+
+    def test_authorization_url_contains_expected_oauth_parameters(self):
+        config = OAuthConfig(
+            client_id="client-id",
+            client_secret="client-secret",
+            redirect_uri="http://127.0.0.1:8765/callback",
+            scopes="personal daily",
+        )
+
+        url = authorization_url(config, "state-value")
+
+        self.assertIn("response_type=code", url)
+        self.assertIn("client_id=client-id", url)
+        self.assertIn("scope=personal+daily", url)
+        self.assertIn("state=state-value", url)
+
+    def test_token_expired_respects_missing_or_expired_tokens(self):
+        self.assertTrue(token_expired(None))
+        self.assertTrue(token_expired({"access_token": "secret", "expires_at": 1}))
+        self.assertFalse(token_expired({"access_token": "secret"}))
 
     def test_readiness_summary_adds_average(self):
         records = [

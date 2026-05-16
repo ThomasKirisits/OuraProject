@@ -132,7 +132,7 @@ def main() -> None:
     token = get_access_token()
     if not token:
         st.title("Oura Personal Health Dashboard")
-        st.info("Set OURA_ACCESS_TOKEN and restart Streamlit to load live Oura data.")
+        st.info("Run python oauth_login.py to create a local Oura OAuth token, then restart Streamlit.")
         return
 
     try:

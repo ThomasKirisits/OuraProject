@@ -58,9 +58,11 @@ The developer is not involved in this process.
 
 ### Authentication Harness
 
-* Personal Access Token support via `OURA_ACCESS_TOKEN`
+* OAuth 2.0 server-side flow with a localhost callback
+* Local login command: `python oauth_login.py`
+* Refresh command: `python oauth_login.py --refresh`
 * Sidebar status check without revealing the token
-* Tokens stay in your shell, service manager, or local secret manager
+* Tokens are written to `.oura-token.json` by default with `0600` permissions
 * `.env` and Streamlit secrets are ignored by Git
 
 ---
@@ -74,7 +76,8 @@ Your Oura Account -> Your App Instance -> Oura API -> Local Dashboard
 Core files:
 
 * `dashboard.py` - Streamlit UI
-* `oura_project/auth.py` - local token/auth status harness
+* `oauth_login.py` - local OAuth callback login CLI
+* `oura_project/auth.py` - OAuth config, callback, token exchange, and refresh helpers
 * `oura_project/client.py` - Oura API v2 client
 * `oura_project/metrics.py` - summary helpers for dashboard cards
 * `tests/test_metrics.py` - standard-library tests for auth, date ranges, and metrics
@@ -87,15 +90,19 @@ Core files:
 
 * Oura account with active membership
 * Python 3.11+
-* Oura Personal Access Token
+* Oura OAuth application with redirect URI `http://127.0.0.1:8765/callback`
 
-Create a personal access token in your Oura developer settings, then keep it outside the repository.
+Create an Oura OAuth application in your Oura developer settings and copy the client ID and client secret. Keep both outside the repository.
 
 ### Environment Variables
 
 ```bash
 cp .env.example .env
-export OURA_ACCESS_TOKEN=your_personal_access_token
+export OURA_CLIENT_ID=your_oura_oauth_client_id
+export OURA_CLIENT_SECRET=your_oura_oauth_client_secret
+export OURA_REDIRECT_URI=http://127.0.0.1:8765/callback
+export OURA_SCOPES="personal daily heartrate spo2Daily"
+export OURA_TOKEN_FILE=.oura-token.json
 export OURA_DAYS_BACK=30
 ```
 
@@ -105,6 +112,26 @@ export OURA_DAYS_BACK=30
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
+```
+
+### Authenticate
+
+```bash
+python oauth_login.py
+```
+
+The command opens the Oura authorization page, starts a one-request local callback server, verifies the OAuth `state`, exchanges the authorization code for tokens, and stores the token JSON locally.
+
+For headless use:
+
+```bash
+python oauth_login.py --no-browser
+```
+
+To refresh a saved token:
+
+```bash
+python oauth_login.py --refresh
 ```
 
 ### Run the Dashboard
@@ -179,7 +206,6 @@ By using this project, you acknowledge:
 
 ## Future Improvements
 
-* OAuth 2.0 callback flow for multi-user deployment
 * Local encrypted token storage
 * Webhook-based updates
 * Multi-source integrations such as Apple Health or Garmin
